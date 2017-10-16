@@ -3,7 +3,9 @@
 
 # Ubuntu 16.04 (xenial) from 2017-07-23
 # https://github.com/docker-library/official-images/commit/0ea9b38b835ffb656c497783321632ec7f87b60c
-FROM ubuntu@sha256:84c334414e2bfdcae99509a6add166bbb4fa4041dc3fa6af08046a66fed3005f
+#FROM ubuntu@sha256:84c334414e2bfdcae99509a6add166bbb4fa4041dc3fa6af08046a66fed3005f
+
+FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 
 MAINTAINER Jupyter Project <jupyter@googlegroups.com>
 
@@ -20,6 +22,7 @@ RUN apt-get update && apt-get -yq dist-upgrade \
     sudo \
     locales \
     fonts-liberation \
+    python3-pip \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -35,7 +38,7 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \
-    NB_USER=jovyan \
+    NB_USER=UROP_student \
     NB_UID=1000 \
     NB_GID=100 \
     LC_ALL=en_US.UTF-8 \
@@ -76,7 +79,7 @@ RUN cd /tmp && \
 # Install Jupyter Notebook and Hub
 RUN conda install --quiet --yes \
     'notebook=5.1.*' \
-    'jupyterhub=0.8.*' \
+    'jupyterhub=0.8.0' \
     'jupyterlab=0.27.*' \
     && conda clean -tipsy && \
     fix-permissions $CONDA_DIR

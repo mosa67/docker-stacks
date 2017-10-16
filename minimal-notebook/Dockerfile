@@ -1,9 +1,10 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM jupyter/base-notebook
+FROM base-notebook-gpu
 
-MAINTAINER Jupyter Project <jupyter@googlegroups.com>
+MAINTAINER aburnap@mit.edu
+# NOTE FROM JUPYTER-STACK
 
 USER root
 
