@@ -45,15 +45,13 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 
 ENV CUDNN_TAR_FILE cudnn-8.0-linux-x64-v6.0.tgz
 
-RUN wget http://developer.download.nvidia.com/compute/redist/cudnn/v6.0/$CUDNN_TAR_FILE
-
-RUN tar -xzvf $CUDNN_TAR_FILE
-
-RUN cp -P cuda/include/cudnn.h /usr/local/cuda/include
-RUN cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64/ 
-
-RUN chmod 777 /usr/local/cuda/lib64/libcudnn*
-
+RUN wget http://developer.download.nvidia.com/compute/redist/cudnn/v6.0/$CUDNN_TAR_FILE && \
+    tar -xzvf $CUDNN_TAR_FILE && \
+    cp -P cuda/include/cudnn.h /usr/local/cuda/include && \
+    cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64/ && \
+    chmod 777 /usr/local/cuda/lib64/libcudnn* && \
+    rm -r cuda && \
+    rm $CUDNN_TAR_FILE
 
 # libav-tools for matplotlib anim
 RUN apt-get update && \
@@ -70,9 +68,6 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
 # Switch back to jovyan to avoid accidental container runs as root
 #USER $NB_USER
 
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
 
 RUN pip --no-cache-dir install \
         Pillow \
@@ -100,37 +95,6 @@ ENV LD_LIBRARY_PATH /usr/local/cuda-8.0:/usr/local/cuda-8.0/lib64:$LD_LIBRARY_PA
 ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH $LD_LIBRARY_PATH
 
-#RUN conda install --quiet --yes \
-    #'nomkl' \
-    #'ipywidgets=7.0*' \
-    #'pandas=0.19*' \
-    #'numexpr=2.6*' \
-    #'matplotlib=2.0*' \
-    #'scipy=0.19*' \
-    #'seaborn=0.7*' \
-    #'scikit-learn=0.18*' \
-    #'scikit-image=0.12*' \
-    #'sympy=1.0*' \
-    #'cython=0.25*' \
-    #'patsy=0.4*' \
-    #'statsmodels=0.8*' \
-    #'cloudpickle=0.2*' \
-    #'dill=0.2*' \
-    #'numba=0.31*' \
-    #'bokeh=0.12*' \
-    #'sqlalchemy=1.1*' \
-    #'hdf5=1.8.17' \
-    #'h5py=2.6*' \
-    #'vincent=0.4.*' \
-    #'beautifulsoup4=4.5.*' \
-    #'protobuf=3.*' \
-    #'xlrd'  && \
-    #conda remove --quiet --yes --force qt pyqt && \
-    #conda clean -tipsy && \
-    ## Activate ipywidgets extension in the environment that runs the notebook server
-    #jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-    #fix-permissions $CONDA_DIR
-
 # Install facets which does not have a pip or conda package at the moment
 RUN cd /tmp && \
     git clone https://github.com/PAIR-code/facets.git && \
@@ -144,12 +108,4 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
     fix-permissions /home/$NB_USER
 
-## Install Tensorflow
-#RUN conda install --quiet --yes \
-    #'tensorflow=1.3*' \
-    #'tensorflow-gpu=1.3*' \
-    #'keras=2.0*' && \
-    #conda clean -tipsy && \
-    #fix-permissions $CONDA_DIR
-
-#USER $NB_USER
+USER $NB_USER
