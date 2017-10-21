@@ -86,6 +86,7 @@ python -m ipykernel.kernelspec
 RUN pip --no-cache-dir install \
         tensorflow \
         tensorflow-gpu \
+        edward \
         keras && \
 python -m ipykernel.kernelspec
 
