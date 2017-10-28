@@ -29,18 +29,10 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     libxrender1 \
     lmodern \
     pandoc \
-    #texlive-fonts-extra \
-    #texlive-fonts-recommended \
-    #texlive-generic-recommended \
-    #texlive-latex-base \
-    #texlive-latex-extra \
-    #texlive-xetex \
     vim \
     unzip \
-    libpng-dev \
-#    libcudnn6=$CUDNN_VERSION-1+cuda8.0 \             
-    #libcudnn6-dev=$CUDNN_VERSION-1+cuda8.0 && \
-    && apt-get clean && \
+    libpng-dev && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 ENV CUDNN_TAR_FILE cudnn-8.0-linux-x64-v6.0.tgz
@@ -65,9 +57,7 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
 
 #COPY jupyter_notebook_config.py ~/.jupyter/
 
-# Switch back to jovyan to avoid accidental container runs as root
-#USER $NB_USER
-
+RUN python -m pip install --upgrade pip
 
 RUN pip --no-cache-dir install \
         Pillow \
@@ -90,6 +80,9 @@ RUN pip --no-cache-dir install \
         keras && \
 python -m ipykernel.kernelspec
 
+RUN conda install pytorch torchvision -c soumith && \
+    conda clean -tipsy && \
+    fix-permissions $CONDA_DIR
 
 ENV CUDA_HOME /usr/local/cuda-8.0
 ENV LD_LIBRARY_PATH /usr/local/cuda-8.0:/usr/local/cuda-8.0/lib64:$LD_LIBRARY_PATH
