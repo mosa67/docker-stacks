@@ -41,13 +41,15 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 #ENV CUDNN_TAR_FILE cudnn-9.0-linux-x64-v7.0.tgz
 
 #RUN wget http://developer.download.nvidia.com/compute/redist/cudnn/v7.0/$CUDNN_TAR_FILE && \
-RUN wget wget https://s3.amazonaws.com/open-source-william-falcon/cudnn-9.0-linux-x64-v7.1.tgz && \
-    tar -xzvf $CUDNN_TAR_FILE && \
+RUN wget https://s3.amazonaws.com/open-source-william-falcon/cudnn-9.0-linux-x64-v7.1.tgz && \
+    #tar -xzvf $CUDNN_TAR_FILE && \
+    tar -xzvf cudnn-9.0-linux-x64-v7.1.tgz && \
     cp -P cuda/include/cudnn.h /usr/local/cuda/include && \
     cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64/ && \
     chmod 777 /usr/local/cuda/lib64/libcudnn* && \
     rm -r cuda && \
-    rm $CUDNN_TAR_FILE
+    #rm $CUDNN_TAR_FILE
+    rm cudnn-9.0-linux-x64-v7.1.tgz
 
 # libav-tools for matplotlib anim
 RUN apt-get update && \
