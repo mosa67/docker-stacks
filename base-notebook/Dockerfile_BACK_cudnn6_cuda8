@@ -5,7 +5,7 @@
 # https://github.com/docker-library/official-images/commit/0ea9b38b835ffb656c497783321632ec7f87b60c
 #FROM ubuntu@sha256:84c334414e2bfdcae99509a6add166bbb4fa4041dc3fa6af08046a66fed3005f
 
-FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 
 MAINTAINER Jupyter Project <jupyter@googlegroups.com>
 
@@ -63,8 +63,7 @@ RUN mkdir /home/$NB_USER/work && \
     fix-permissions /home/$NB_USER
 
 # Install conda as UROP_student and check the md5 sum provided on the download site
-#ENV MINICONDA_VERSION 4.3.21
-ENV MINICONDA_VERSION 4.5.1
+ENV MINICONDA_VERSION 4.3.21
 RUN cd /tmp && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "c1c15d3baba15bf50293ae963abef853 *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
@@ -77,19 +76,11 @@ RUN cd /tmp && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR
 
-## Install Jupyter Notebook and Hub
-#RUN conda install --quiet --yes \
-    #'notebook=5.1.*' \
-    #'jupyterhub=0.8.0' \
-    #'jupyterlab=0.27.*' \
-    #&& conda clean -tipsy && \
-    #fix-permissions $CONDA_DIR
-
 # Install Jupyter Notebook and Hub
 RUN conda install --quiet --yes \
-    'notebook=5.4.*' \
-    'jupyterhub=0.8.*' \
-    'jupyterlab=0.32.*' \
+    'notebook=5.1.*' \
+    'jupyterhub=0.8.0' \
+    'jupyterlab=0.27.*' \
     && conda clean -tipsy && \
     fix-permissions $CONDA_DIR
 
