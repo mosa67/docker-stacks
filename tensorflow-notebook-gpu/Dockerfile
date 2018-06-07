@@ -10,6 +10,8 @@ MAINTAINER aburnap@mit.edu
 
 USER root
 
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # Install all OS dependencies for fully functional notebook server
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     build-essential \
@@ -56,15 +58,15 @@ RUN echo "$ssh_prv_key" > ~/.ssh/id_rsa && \
 #ENV CUDNN_TAR_FILE cudnn-9.0-linux-x64-v7.0.tgz
 
 ##RUN wget http://developer.download.nvidia.com/compute/redist/cudnn/v7.0/$CUDNN_TAR_FILE && \
-#RUN wget https://s3.amazonaws.com/open-source-william-falcon/cudnn-9.0-linux-x64-v7.1.tgz && \
-    ##tar -xzvf $CUDNN_TAR_FILE && \
-    #tar -xzvf cudnn-9.0-linux-x64-v7.1.tgz && \
-    #cp -P cuda/include/cudnn.h /usr/local/cuda/include && \
-    #cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64/ && \
-    #chmod 777 /usr/local/cuda/lib64/libcudnn* && \
-    #rm -r cuda && \
-    ##rm $CUDNN_TAR_FILE
-    #rm cudnn-9.0-linux-x64-v7.1.tgz
+RUN wget https://s3.amazonaws.com/open-source-william-falcon/cudnn-9.0-linux-x64-v7.1.tgz && \
+    #tar -xzvf $CUDNN_TAR_FILE && \
+    tar -xzvf cudnn-9.0-linux-x64-v7.1.tgz && \
+    cp -P cuda/include/cudnn.h /usr/local/cuda/include && \
+    cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64/ && \
+    chmod 777 /usr/local/cuda/lib64/libcudnn* && \
+    rm -r cuda && \
+    #rm $CUDNN_TAR_FILE
+    rm cudnn-9.0-linux-x64-v7.1.tgz
 
 # libav-tools for matplotlib anim
 RUN apt-get update && \
@@ -116,10 +118,10 @@ RUN conda install pytorch torchvision cuda90 -c pytorch && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR
 
-#ENV CUDA_HOME /usr/local/cuda-9.0
-#ENV LD_LIBRARY_PATH /usr/local/cuda-9.0:/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
-#ENV LD_LIBRARY_PATH /usr/local/cuda-9.0/extras/CUPTI/lib64:$LD_LIBRARY_PATH
-#ENV LIBRARY_PATH $LD_LIBRARY_PATH
+ENV CUDA_HOME /usr/local/cuda-9.0
+ENV LD_LIBRARY_PATH /usr/local/cuda-9.0:/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH /usr/local/cuda-9.0/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH $LD_LIBRARY_PATH
 
 # Install facets which does not have a pip or conda package at the moment
 RUN cd /tmp && \
