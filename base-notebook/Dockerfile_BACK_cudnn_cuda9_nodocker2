@@ -5,10 +5,9 @@
 # https://github.com/docker-library/official-images/commit/0ea9b38b835ffb656c497783321632ec7f87b60c
 #FROM ubuntu@sha256:84c334414e2bfdcae99509a6add166bbb4fa4041dc3fa6af08046a66fed3005f
 
-FROM nvidia/cuda
+FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 
-
-MAINTAINER Alex Burnap <aburnap@mit.edu> build on Jupyter Project <jupyter@googlegroups.com>
+MAINTAINER Jupyter Project <jupyter@googlegroups.com>
 
 USER root
 
@@ -17,7 +16,6 @@ RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
@@ -29,7 +27,6 @@ RUN apt-get update && apt-get -yq dist-upgrade \
     python3-pip \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
-
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -43,7 +40,7 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \
-    NB_USER=remote_user \
+    NB_USER=UROP_student \
     NB_UID=1000 \
     NB_GID=100 \
     LC_ALL=en_US.UTF-8 \
