@@ -91,12 +91,22 @@ RUN cd /tmp && \
     #fix-permissions $CONDA_DIR
 
 # Install Jupyter Notebook and Hub
+# RUN conda install --quiet --yes \
+#     'notebook=5.4.*' \
+#     'jupyterhub=0.8.*' \
+#     'jupyterlab=0.32.*' \
+#     && conda clean -tipsy && \
+#     fix-permissions $CONDA_DIR
+
+# JupyterHub 9.0
 RUN conda install --quiet --yes \
     'notebook=5.4.*' \
-    'jupyterhub=0.8.*' \
+    'jupyterhub=0.9.*' \
     'jupyterlab=0.32.*' \
     && conda clean -tipsy && \
     fix-permissions $CONDA_DIR
+
+
 
 USER root
 
